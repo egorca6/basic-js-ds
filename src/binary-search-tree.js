@@ -1,49 +1,151 @@
-const { NotImplementedError } = require('../extensions/index.js');
+const { NotImplementedError } = require("../extensions/index.js");
 
 // const { Node } = require('../extensions/list-tree.js');
 
 /**
-* Implement simple binary search tree according to task description
-* using Node from extensions
-*/
+ * Implement simple binary search tree according to task description
+ * using Node from extensions
+ * 
+ *  //    npm run test ./test/binary-search-tree.test
+    // console.debug("text");
+ */
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.left = null;
+    this.right = null;
+  }
+}
 class BinarySearchTree {
-
+  constructor() {
+    this.rootNode = null;
+  }
   root() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.rootNode;
   }
 
-  add(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  add(data) {
+    this.rootNode = addWithin(this.rootNode, data);
+    function addWithin(node, data) {
+      if (!node) {
+        return new Node(data);
+      }
+      if (node.value === data) {
+        return node;
+      }
+      if (data < node.value) {
+        node.left = addWithin(node.left, data);
+      } else {
+        node.right = addWithin(node.right, data);
+      }
+      // console.debug("НОДА = " + node);
+      return node;
+    }
   }
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  has(data) {
+    return searchWithin(this.rootNode, data);
+
+    function searchWithin(node, data) {
+      if (!node) {
+        // console.debug("ЕСТЬ ЖЕ нет ? = " + true);
+        return false;
+      }
+      if (node.value === data) {
+        // console.debug("ЕСТЬ ЖЕ да ? = " + true);
+        return true;
+      }
+      // console.debug(
+      //   "ЕСТЬ ЖЕ ? = " + searchWithin(node.left, data),
+      //   searchWithin(node.right, data)
+      // );
+      return data < node.value
+        ? searchWithin(node.left, data)
+        : searchWithin(node.right, data);
+    }
+  }
+  // throw new NotImplementedError("Not implemented");
+  // // remove line with error and write your code here
+  find(data) {
+    return findhWithin(this.rootNode, data);
+
+    function findhWithin(node, data) {
+      if (!node) {
+        // console.debug("ЕСТЬ ЖЕ нет ? = " + null);
+        return null;
+      }
+      if (node.value === data) {
+        // console.debug("ЕСТЬ ЖЕ да ? = " + node);
+        return node;
+      }
+
+      return data < node.value
+        ? findhWithin(node.left, data)
+        : findhWithin(node.right, data);
+    }
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
-  }
+  remove(data) {
+    this.rootNode = removeNode(this.rootNode, data);
+    function removeNode(node, data) {
+      if (!node) {
+        return null;
+      }
+      if (data < node.value) {
+        node.left = removeNode(node.left, data);
+        return node;
+      } else if (data > node.value) {
+        node.right = removeNode(node.right, data);
+        return node;
+      } else {
+        if (!node.left && !node.right) {
+          return null;
+        }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+        if (!node.left) {
+          node = node.right;
+          return node;
+        }
+
+        if (!node.right) {
+          node = node.left;
+          return node;
+        }
+
+        let minFromRight = node.right;
+        while (minFromRight.left) {
+          minFromRight = minFromRight.left;
+        }
+        node.value = minFromRight.value;
+        node.right = removeNode(node.right, minFromRight.value);
+        return node;
+      }
+    }
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this.rootNode) {
+      return;
+    }
+    let node = this.rootNode;
+    while (node.left) {
+      node = node.left;
+    }
+    return node.value;
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this.rootNode) {
+      return;
+    }
+    let node = this.rootNode;
+    while (node.right) {
+      node = node.right;
+    }
+    return node.value;
   }
 }
 
 module.exports = {
-  BinarySearchTree
+  BinarySearchTree,
 };
