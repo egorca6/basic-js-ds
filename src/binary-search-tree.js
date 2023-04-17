@@ -10,8 +10,9 @@ const { NotImplementedError } = require("../extensions/index.js");
     // console.debug("text");
  */
 class Node {
-  constructor(value) {
-    this.value = value;
+  constructor(data) {
+    // this.value = value;
+    this.data = data;
     this.left = null;
     this.right = null;
   }
@@ -21,6 +22,7 @@ class BinarySearchTree {
     this.rootNode = null;
   }
   root() {
+    // console.debug("Это корень?  " + this.rootNode);
     return this.rootNode;
   }
 
@@ -30,14 +32,12 @@ class BinarySearchTree {
       if (!node) {
         return new Node(data);
       }
-      if (node.value === data) {
+      if (node.data === data) {
         return node;
       }
-      if (data < node.value) {
-        node.left = addWithin(node.left, data);
-      } else {
-        node.right = addWithin(node.right, data);
-      }
+      data < node.data
+        ? (node.left = addWithin(node.left, data))
+        : (node.right = addWithin(node.right, data));
       // console.debug("НОДА = " + node);
       return node;
     }
@@ -48,38 +48,32 @@ class BinarySearchTree {
 
     function searchWithin(node, data) {
       if (!node) {
-        // console.debug("ЕСТЬ ЖЕ нет ? = " + true);
         return false;
       }
-      if (node.value === data) {
-        // console.debug("ЕСТЬ ЖЕ да ? = " + true);
+      if (node.data === data) {
         return true;
       }
-      // console.debug(
-      //   "ЕСТЬ ЖЕ ? = " + searchWithin(node.left, data),
-      //   searchWithin(node.right, data)
-      // );
-      return data < node.value
+
+      return data < node.data
         ? searchWithin(node.left, data)
         : searchWithin(node.right, data);
     }
   }
-  // throw new NotImplementedError("Not implemented");
-  // // remove line with error and write your code here
+
   find(data) {
     return findhWithin(this.rootNode, data);
 
     function findhWithin(node, data) {
+      // console.debug("Ищем число = " + data);
       if (!node) {
-        // console.debug("ЕСТЬ ЖЕ нет ? = " + null);
+        // console.debug("НАлл ? = " + null);
         return null;
       }
-      if (node.value === data) {
-        // console.debug("ЕСТЬ ЖЕ да ? = " + node);
+      if (node.data === data) {
         return node;
       }
 
-      return data < node.value
+      return data < node.data
         ? findhWithin(node.left, data)
         : findhWithin(node.right, data);
     }
@@ -91,10 +85,10 @@ class BinarySearchTree {
       if (!node) {
         return null;
       }
-      if (data < node.value) {
+      if (data < node.data) {
         node.left = removeNode(node.left, data);
         return node;
-      } else if (data > node.value) {
+      } else if (data > node.data) {
         node.right = removeNode(node.right, data);
         return node;
       } else {
@@ -116,8 +110,8 @@ class BinarySearchTree {
         while (minFromRight.left) {
           minFromRight = minFromRight.left;
         }
-        node.value = minFromRight.value;
-        node.right = removeNode(node.right, minFromRight.value);
+        node.data = minFromRight.data;
+        node.right = removeNode(node.right, minFromRight.data);
         return node;
       }
     }
@@ -131,7 +125,7 @@ class BinarySearchTree {
     while (node.left) {
       node = node.left;
     }
-    return node.value;
+    return node.data;
   }
 
   max() {
@@ -142,7 +136,7 @@ class BinarySearchTree {
     while (node.right) {
       node = node.right;
     }
-    return node.value;
+    return node.data;
   }
 }
 
